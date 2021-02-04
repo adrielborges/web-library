@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { BsSearch } from 'react-icons/bs';
-import { Container, CardBook } from './styles';
+import { DebounceInput } from 'react-debounce-input';
+import { Container, Main, CardBook } from './styles';
 
 import api from '../../services/api';
 
@@ -13,7 +14,7 @@ interface IBook {
 
     description: string;
     imageLinks: {
-      smallThumbnail: string;
+      smallThumbnail?: string;
     };
   };
 }
@@ -23,10 +24,10 @@ const ListScreen: React.FC = () => {
   const [searchBooks, setSearchBooks] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useCallback(async () => {
+  const handleFechBooks = useCallback(async () => {
     const response = await api.get(`/volumes?q=${searchBooks}`);
-
     setBooks(response.data.items);
+
     setLoading(false);
   }, [searchBooks]);
 
@@ -35,22 +36,32 @@ const ListScreen: React.FC = () => {
       {/* <button type="button" onClick={() => handleFechBooks('design')}>
         fecth data
       </button> */}
-
       <header>
-        <input
-          value={searchBooks}
-          onChange={e => setSearchBooks(e.target.value)}
-          type="text"
+        <DebounceInput
+          minLength={2}
+          debounceTimeout={1000}
+          onChange={e => {
+            setSearchBooks(e.target.value);
+            handleFechBooks();
+          }}
         />
         <BsSearch />
       </header>
-      {searchBooks.length
-        ? 'Carregando!'
-        : books.map(book => (
-            <CardBook key={book.id}>
-              <img src={book.volumeInfo.imageLinks.smallThumbnail} alt="test" />
-            </CardBook>
-          ))}
+      <Main>
+        {books.map(book => (
+          <CardBook key={book.id}>
+            <img
+              src={
+                !book.volumeInfo.imageLinks.smallThumbnail
+                  ? 'http://www.ccta.ufpb.br/labeet/contents/acervos/categorias/cordofones/udecra/sem-imagem.jpg/@@images/image.jpeg'
+                  : book.volumeInfo.imageLinks.smallThumbnail
+              }
+              alt="test"
+            />
+          </CardBook>
+        ))}
+      </Main>
+      Carregar mais...
     </Container>
   );
 };
