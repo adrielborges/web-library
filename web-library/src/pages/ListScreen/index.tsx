@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
+import { BsSearch } from 'react-icons/bs';
 import { Container, CardBook } from './styles';
 
 import api from '../../services/api';
@@ -19,24 +20,37 @@ interface IBook {
 
 const ListScreen: React.FC = () => {
   const [books, setBooks] = useState<IBook[]>([]);
+  const [searchBooks, setSearchBooks] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleFechBooks = useCallback(async (query: string) => {
-    const response = await api.get(`/volumes?q=${query}`);
+  useCallback(async () => {
+    const response = await api.get(`/volumes?q=${searchBooks}`);
 
     setBooks(response.data.items);
-  }, []);
+    setLoading(false);
+  }, [searchBooks]);
 
   return (
     <Container>
-      <button type="button" onClick={() => handleFechBooks('design')}>
+      {/* <button type="button" onClick={() => handleFechBooks('design')}>
         fecth data
-      </button>
+      </button> */}
 
-      {books.map(book => (
-        <CardBook key={book.id}>
-          <img src={book.volumeInfo.imageLinks.smallThumbnail} alt="test" />
-        </CardBook>
-      ))}
+      <header>
+        <input
+          value={searchBooks}
+          onChange={e => setSearchBooks(e.target.value)}
+          type="text"
+        />
+        <BsSearch />
+      </header>
+      {searchBooks.length
+        ? 'Carregando!'
+        : books.map(book => (
+            <CardBook key={book.id}>
+              <img src={book.volumeInfo.imageLinks.smallThumbnail} alt="test" />
+            </CardBook>
+          ))}
     </Container>
   );
 };
