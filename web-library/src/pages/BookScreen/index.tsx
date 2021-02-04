@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container } from './styles';
 
 const BookScreen: React.FC = () => {
+  const [favorited, setFavorited] = useState(true);
+  const [stars, setStars] = useState();
   return (
     <Container>
       <div>
