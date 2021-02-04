@@ -7,9 +7,9 @@ const Home: React.FC = () => {
   return (
     <div>
       <h1>Welcome to Web Library!</h1>
-      <Link to="/list" >Comece Agora!</Link>
+      <Link to="/list">Comece Agora!</Link>
     </div>
   );
-}
+};
 
 export default Home;

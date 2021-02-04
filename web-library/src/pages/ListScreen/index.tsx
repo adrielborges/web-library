@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react';
 
-// import { Container } from './styles';
-import api from './../../services/api';
+import { Container, CardBook } from './styles';
+
+import api from '../../services/api';
 
 interface IBook {
   id: string;
@@ -12,32 +13,32 @@ interface IBook {
     description: string;
     imageLinks: {
       smallThumbnail: string;
-    }
-  }
-
+    };
+  };
 }
 
 const ListScreen: React.FC = () => {
   const [books, setBooks] = useState<IBook[]>([]);
 
   const handleFechBooks = useCallback(async (query: string) => {
-    //const response = await api.get(`/volumes?q=${query}&key=AIzaSyDwkIwOxFLHYVy34G-UzPlbvssEd_2k5zE`);
-    const response = await api.get(`/volumes?q=flowers+inauthor:keyes&key=AIzaSyDwkIwOxFLHYVy34G-UzPlbvssEd_2k5zE`);
+    const response = await api.get(`/volumes?q=${query}`);
 
-    setBooks(response.data.items)
-  }, [])
+    setBooks(response.data.items);
+  }, []);
 
   return (
-  <div >
-    <button type="button" onClick={()=>handleFechBooks('design')}>fecth data</button>
+    <Container>
+      <button type="button" onClick={() => handleFechBooks('design')}>
+        fecth data
+      </button>
 
-    {books.map(book => (
-      <div key={book.id}>
-        <img src={book.volumeInfo.imageLinks.smallThumbnail} alt="test" />
-      </div>
-    ))}
-  </div>
+      {books.map(book => (
+        <CardBook key={book.id}>
+          <img src={book.volumeInfo.imageLinks.smallThumbnail} alt="test" />
+        </CardBook>
+      ))}
+    </Container>
   );
-}
+};
 
 export default ListScreen;
