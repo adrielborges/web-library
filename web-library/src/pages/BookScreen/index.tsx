@@ -49,7 +49,6 @@ interface Params {
 const BookScreen: React.FC = () => {
   const [favorited, setFavorited] = useState(false);
   const [like, setLike] = useState(false);
-  const [, setStars] = useState();
   const [book, setBook] = useState<IBook>({
     id: '',
     volumeInfo: {

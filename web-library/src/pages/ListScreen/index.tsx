@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { BsSearch } from 'react-icons/bs';
 import { DebounceInput } from 'react-debounce-input';
